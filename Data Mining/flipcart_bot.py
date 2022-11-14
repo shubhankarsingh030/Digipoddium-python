@@ -24,53 +24,53 @@ def extract(soup):
         rating_count = item.find('div',class_='_2_R_DZ')
         data = {}
         try:
-            data['name'] = name.text.string()
+            data['name'] = name.text.strip()
         except:
             data['name'] = None
         try:
-            data['s_price'] = s_price.text.string()
+            data['s_price'] = s_price.text.strip()
         except:
             data['s_price'] = None
         try:
-            data['o_price'] = o_price.text.string()
+            data['o_price'] = o_price.text.strip()
         except:
             data['o_price'] = None
         try:
-            data['rating'] = rating.text.string()
+            data['rating'] = rating.text.strip()
         except:
             data['rating'] = None
         try:
-            data['rating_count'] = rating_count.text.string()
+            data['rating_count'] = rating_count.text.strip()
         except:
             data['rating_count'] = None
         info.append(data)
-        print('Extracted: ' , name.text)
+        print('Extracted: ' , name)
     return info         
 
 def save(data):
-    if len(data_list) > 0:
-            pd.DataFrame(data_list).to_csv('headlines.csv', index = False)
+    if len(data) > 0:
+        pd.DataFrame(data).to_csv('headlines.csv', index = False)
     else:
-            print('No data to save')
+        print('No data to save')
 
 def main():
     pos = 1
     product = 'tv'
     datalist = []
     while True:
-        url = "https://www.flipkart.com/search?q={product}tv&page={pos}"
+        url = f"https://www.flipkart.com/search?q={product}tv&page={pos}"
         print(url)
         soup = get(url)
         if soup:
             data = extract(soup)
             if data:
                 datalist.extend(data)
-                pos = 1
+                pos += 1
             else:
                 break
         else:
             break
-            
+    save(datalist)       
 
 main()
     
